@@ -1,0 +1,115 @@
+openapi: "3.0.1"
+info:
+  title: Transaction API
+  description: API para gestionar transacciones
+  version: 1.0.0
+servers:
+  - url: http://localhost:8082
+    description: Servidor local
+paths:
+  /transacciones/deposito:
+    post:
+      summary: Registrar un deposito
+      operationId: registrarDeposito
+      requestBody:
+        description: Datos de la transacciones de tipo deposito
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionRequest"
+      responses:
+        '200':
+          description: Tarjeta creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionResponse"
+  /transacciones/retiro:
+    post:
+      summary: Registrar un retiro
+      operationId: registrarRetiro
+      requestBody:
+        description: Datos de la transacciones de tipo retiro
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionRequest"
+      responses:
+        '200':
+          description: Tarjeta creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionResponse"
+  /transacciones/transferencia:
+    post:
+      summary: Registrar una transferencia
+      operationId: registrarTransferencia
+      requestBody:
+        description: Datos de la transacciones de tipo transferencia
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionRequest"
+      responses:
+        '200':
+          description: Tarjeta creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionResponse"
+  /transacciones/historial:
+    get:
+      summary: Consultar historial de transacciones
+      operationId: consultarTransacciones
+      description: Devuelve una lista de todos los objetos tipo transaccion
+      responses:
+        '200':
+          description: Lista de objetos tipo transaccion
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionResponse'
+        '204':
+          description: No hay objetos transaccion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "No se encontraron objetos tipo transaccion"
+components:
+  schemas:
+    TransactionRequest:
+      type: object
+      properties:
+        monto:
+          type: number
+          format: double
+        fecha:
+          type: string
+        cuentaOrigen:
+          type: string
+        cuentaDestino:
+          type: string
+    TransactionResponse:
+      type: object
+      properties:
+        tipo:
+          type: string
+        monto:
+          type: number
+          format: double
+        fecha:
+          type: string
+        cuentaOrigen:
+          type: string
+        cuentaDestino:
+          type: string
