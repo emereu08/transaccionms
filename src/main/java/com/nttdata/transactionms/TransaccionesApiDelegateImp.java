@@ -23,18 +23,30 @@ public class TransaccionesApiDelegateImp implements TransaccionesApiDelegate {
     }
 
     @Override
-    public  ResponseEntity<TransactionResponse> registrarDeposito(TransactionRequest transactionRequest) throws Exception {
-        return ResponseEntity.ok(transaccionService.registrarDeposito(transactionRequest));
+    public  ResponseEntity<TransactionResponse> registrarDeposito(TransactionRequest transactionRequest) {
+        try {
+            return ResponseEntity.ok(transaccionService.registrarDeposito(transactionRequest));
+        } catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Override
-    public ResponseEntity<TransactionResponse> registrarRetiro(TransactionRequest transactionRequest) throws Exception {
+    public ResponseEntity<TransactionResponse> registrarRetiro(TransactionRequest transactionRequest) {
+        try {
         return ResponseEntity.ok(transaccionService.registrarRetiro(transactionRequest));
+    } catch (Exception e){
+        return ResponseEntity.badRequest().build();
+    }
     }
 
     @Override
-    public ResponseEntity<TransactionResponse> registrarTransferencia(TransactionRequest transactionRequest) throws Exception {
-        return ResponseEntity.ok(transaccionService.registrarTransferencia(transactionRequest));
+    public ResponseEntity<TransactionResponse> registrarTransferencia(TransactionRequest transactionRequest) {
+        try {
+            return ResponseEntity.ok(transaccionService.registrarTransferencia(transactionRequest));
+        } catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }

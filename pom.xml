@@ -86,9 +86,36 @@
 			<artifactId>json</artifactId>
 			<version>20240303</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.7</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
+		<!--Cobertura con Jacoco-->
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.8.8</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<!--Cobertura con Jacoco-->
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -124,6 +151,33 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!--Cobertura con Jacoco-->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<!--Exclusiones para reporte de cobertura-->
+				<configuration>
+					<excludes>
+						<exclude>com/nttdata/transactionms/TransactionmsApplication.class</exclude>
+					</excludes>
+				</configuration>
+				<!--Exclusiones para reporte de cobertura-->
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--Cobertura con Jacoco-->
 
 		</plugins>
 	</build>

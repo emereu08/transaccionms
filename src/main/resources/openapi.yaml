@@ -25,6 +25,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TransactionResponse"
+        '400':
+          description: bad request
   /transacciones/retiro:
     post:
       summary: Registrar un retiro

@@ -1,46 +1,83 @@
 package com.nttdata.transactionms.business;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Component
 public class HttpConection {
 
-    public static Map<String, Object> getCuentaByNumeroCuenta() throws Exception {
-        Map<String, Object> cuenta = new HashMap<>();
-        String url = "http://localhost:8080/cuentas/4";
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        con.setRequestMethod("GET");
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
+     public StringBuffer ejecutarSolicitudHttp(String uri, String tipoConexion) {
         StringBuffer response = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+        try {
+            URL url = new URL(uri);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod(tipoConexion);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            while ((inputLine = bufferedReader.readLine()) != null) {
+                response.append(inputLine);
+            }
+            bufferedReader.close();
+        } catch (Exception e){
+            System.out.println("Error: "+e.getMessage());
         }
-        in.close();
-
-        System.out.println(response.toString());
-
-        JSONObject myResponse = new JSONObject(response.toString());
-        System.out.println(myResponse.toString());
-        cuenta = myResponse.toMap();
-        System.out.println(cuenta.get("numeroCuenta"));
-
-        return cuenta;
+        return response;
     }
+
+    public StringBuffer ejecutarSolicitudHttp(String uri, String tipoConexion, String body) {
+        StringBuffer response = new StringBuffer();
+        try {
+            URL url = new URL(uri);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod(tipoConexion);
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+
+            try(OutputStream outputStream = con.getOutputStream()) {
+                byte[] input = body.getBytes("utf-8");
+                outputStream.write(input, 0, input.length);
+            }
+
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            while ((inputLine = bufferedReader.readLine()) != null) {
+                response.append(inputLine);
+            }
+            bufferedReader.close();
+        } catch (Exception e){
+            System.out.println("Error: "+e.getMessage());
+        }
+        return response;
+    }
+
+    public Map<String, Object> stringToMap(String response){
+        JSONObject jsonObject = new JSONObject(response);
+        return jsonObject.toMap();
+    }
+
+    public List<Map<String, Object>> stringToArray(String response){
+        //JSONObject jsonObject = new JSONObject(response);
+
+        Gson gson = new Gson();
+        Type resultType = new TypeToken<List<Map<String, Object>>>(){}.getType();
+        List<Map<String, Object>> result = gson.fromJson(response, resultType);
+
+        return result;
+    }
+
 
 
 }
